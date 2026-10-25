@@ -1,0 +1,43 @@
+# Data lokal (berisi IP/MAC jaringan Anda: JANGAN di-commit)
+usage_log.json
+devices.json
+known_devices.json
+settings.json
+instance.json
+history.db
+netsys.log*
+*.log
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+# Build
+build/
+dist/
+*.spec.bak
+netsys.ico
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+# Arsip lama hasil refactor
+_monolith_*.py
+# Local application data — do not publish
+usage_log.json
+devices.json
+known_devices.json
+settings.json
+instance.json
+history.db
+netsys.log*
+*.log
+
+# Environment secrets
+.env
+.env.*
+!.env.example

@@ -1,0 +1,17 @@
+name: Sensor suhu/GPU tidak terbaca
+description: LibreHardwareMonitor jalan tetapi data tidak muncul di Netsys Monitor
+labels: [hardware]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Buka `http://127.0.0.1:8085/data.json` di browser (Remote Web Server LibreHardwareMonitor harus aktif),
+        lalu tempel potongan bagian sensor yang tidak terbaca (CPU/GPU saja). Hapus nama PC bila perlu.
+  - type: input
+    id: lhm
+    attributes: { label: Versi LibreHardwareMonitor }
+    validations: { required: true }
+  - type: textarea
+    id: json
+    attributes: { label: Potongan data.json, render: json }
+    validations: { required: true }

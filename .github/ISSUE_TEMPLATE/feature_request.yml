@@ -1,0 +1,8 @@
+name: Usul fitur
+description: Ide untuk Netsys Monitor
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes: { label: Apa yang ingin ditambahkan dan kenapa berguna? }
+    validations: { required: true }

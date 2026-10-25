@@ -1,0 +1,25 @@
+name: Laporan bug
+description: Ada yang tidak berfungsi
+labels: [bug]
+body:
+  - type: input
+    id: version
+    attributes: { label: Versi Netsys Monitor, placeholder: "mis. 2.2 (lihat tab Windows > kartu Sensor, atau --version)" }
+    validations: { required: true }
+  - type: input
+    id: os
+    attributes: { label: Windows/OS dan bahasa, placeholder: "mis. Windows 11 23H2, bahasa Indonesia" }
+    validations: { required: true }
+  - type: dropdown
+    id: how
+    attributes: { label: Cara menjalankan, options: [".exe", "Installer", "python -m netsys_monitor", "lainnya"] }
+  - type: textarea
+    id: what
+    attributes: { label: Apa yang terjadi? Apa yang diharapkan? }
+    validations: { required: true }
+  - type: textarea
+    id: log
+    attributes:
+      label: Log
+      description: "Tray > Buka folder data > netsys.log. Hapus IP/MAC/SSID pribadi sebelum menempel."
+      render: text

@@ -1,0 +1,232 @@
+{
+ "id": 0,
+ "Text": "Sensor",
+ "Min": "Min",
+ "Value": "Value",
+ "Max": "Max",
+ "ImageURL": "",
+ "Children": [
+  {
+   "id": 163,
+   "Text": "PC",
+   "Min": "",
+   "Value": "",
+   "Max": "",
+   "ImageURL": "images_icon/computer.png",
+   "Children": [
+    {
+     "id": 162,
+     "Text": "Intel Core i7-11800H",
+     "Value": "",
+     "ImageURL": "images_icon/cpu.png",
+     "Children": [
+      {
+       "id": 159,
+       "Text": "Temperatures",
+       "Value": "",
+       "ImageURL": "images/transparent.png",
+       "Children": [
+        {
+         "id": 156,
+         "Text": "Core #1 (Distance to TjMax)",
+         "Value": "61,0 °C",
+         "Children": []
+        },
+        {
+         "id": 157,
+         "Text": "CPU Package",
+         "Value": "58,5 °C",
+         "Children": []
+        },
+        {
+         "id": 158,
+         "Text": "Core Max",
+         "Value": "60,0 °C",
+         "Children": []
+        }
+       ]
+      },
+      {
+       "id": 161,
+       "Text": "Powers",
+       "Value": "",
+       "ImageURL": "images/transparent.png",
+       "Children": [
+        {
+         "id": 160,
+         "Text": "CPU Package",
+         "Value": "23,4 W",
+         "Children": []
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": 155,
+     "Text": "Intel(R) UHD Graphics",
+     "Value": "",
+     "ImageURL": "images_icon/gpu.png",
+     "Children": [
+      {
+       "id": 151,
+       "Text": "Load",
+       "Value": "",
+       "ImageURL": "images/transparent.png",
+       "Children": [
+        {
+         "id": 150,
+         "Text": "D3D 3D",
+         "Value": "12,0 %",
+         "Children": []
+        }
+       ]
+      },
+      {
+       "id": 154,
+       "Text": "Data",
+       "Value": "",
+       "ImageURL": "images/transparent.png",
+       "Children": [
+        {
+         "id": 152,
+         "Text": "D3D Shared Memory Used",
+         "Value": "512,0 MB",
+         "Children": []
+        },
+        {
+         "id": 153,
+         "Text": "D3D Shared Memory Total",
+         "Value": "8,0 GB",
+         "Children": []
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": 149,
+     "Text": "NVIDIA GeForce RTX 3060 Laptop GPU",
+     "Value": "",
+     "ImageURL": "images_icon/nvidia.png",
+     "Children": [
+      {
+       "id": 134,
+       "Text": "Temperatures",
+       "Value": "",
+       "ImageURL": "images/transparent.png",
+       "Children": [
+        {
+         "id": 132,
+         "Text": "GPU Core",
+         "Value": "61,0 °C",
+         "Children": []
+        },
+        {
+         "id": 133,
+         "Text": "GPU Hot Spot",
+         "Value": "72,0 °C",
+         "Children": []
+        }
+       ]
+      },
+      {
+       "id": 137,
+       "Text": "Load",
+       "Value": "",
+       "ImageURL": "images/transparent.png",
+       "Children": [
+        {
+         "id": 135,
+         "Text": "GPU Core",
+         "Value": "35,0 %",
+         "Children": []
+        },
+        {
+         "id": 136,
+         "Text": "GPU Memory",
+         "Value": "20,0 %",
+         "Children": []
+        }
+       ]
+      },
+      {
+       "id": 141,
+       "Text": "Data",
+       "Value": "",
+       "ImageURL": "images/transparent.png",
+       "Children": [
+        {
+         "id": 138,
+         "Text": "GPU Memory Used",
+         "Value": "1536,0 MB",
+         "Children": []
+        },
+        {
+         "id": 139,
+         "Text": "GPU Memory Total",
+         "Value": "6,0 GB",
+         "Children": []
+        },
+        {
+         "id": 140,
+         "Text": "GPU Memory Free",
+         "Value": "4608,0 MB",
+         "Children": []
+        }
+       ]
+      },
+      {
+       "id": 143,
+       "Text": "Powers",
+       "Value": "",
+       "ImageURL": "images/transparent.png",
+       "Children": [
+        {
+         "id": 142,
+         "Text": "GPU Package",
+         "Value": "48,2 W",
+         "Children": []
+        }
+       ]
+      },
+      {
+       "id": 146,
+       "Text": "Clocks",
+       "Value": "",
+       "ImageURL": "images/transparent.png",
+       "Children": [
+        {
+         "id": 144,
+         "Text": "GPU Core",
+         "Value": "1425,0 MHz",
+         "Children": []
+        },
+        {
+         "id": 145,
+         "Text": "GPU Memory",
+         "Value": "6001,0 MHz",
+         "Children": []
+        }
+       ]
+      },
+      {
+       "id": 148,
+       "Text": "Controls",
+       "Value": "",
+       "ImageURL": "images/transparent.png",
+       "Children": [
+        {
+         "id": 147,
+         "Text": "GPU Fan",
+         "Value": "41,0 %",
+         "Children": []
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

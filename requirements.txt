@@ -1,0 +1,6 @@
+# Dependensi runtime (pip install -r requirements.txt)
+psutil>=5.9
+speedtest-cli>=2.1
+nvidia-ml-py>=12
+pystray>=0.19
+pillow>=10

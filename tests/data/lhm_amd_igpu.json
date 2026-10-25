@@ -1,0 +1,360 @@
+{
+ "id": 0,
+ "Text": "Sensor",
+ "Min": "Min",
+ "Value": "Value",
+ "Max": "Max",
+ "ImageURL": "",
+ "Children": [
+  {
+   "id": 131,
+   "Text": "PC",
+   "Min": "",
+   "Value": "",
+   "Max": "",
+   "ImageURL": "images_icon/computer.png",
+   "Children": [
+    {
+     "id": 126,
+     "Text": "AMD Ryzen 5 5500U",
+     "Min": "",
+     "Value": "",
+     "Max": "",
+     "ImageURL": "images_icon/cpu.png",
+     "Children": [
+      {
+       "id": 123,
+       "Text": "Temperatures",
+       "Min": "",
+       "Value": "",
+       "Max": "",
+       "ImageURL": "images_icon/temperature.png",
+       "Children": [
+        {
+         "id": 122,
+         "Text": "Core (Tctl/Tdie)",
+         "Min": "64.5 °C",
+         "Value": "64.5 °C",
+         "Max": "64.5 °C",
+         "SensorId": "/amdcpu/0/temperature/0",
+         "Type": "Temperature",
+         "RawValue": "64.5 °C",
+         "ImageURL": "images/transparent.png",
+         "Children": []
+        }
+       ]
+      },
+      {
+       "id": 125,
+       "Text": "Powers",
+       "Min": "",
+       "Value": "",
+       "Max": "",
+       "ImageURL": "images_icon/power.png",
+       "Children": [
+        {
+         "id": 124,
+         "Text": "Package",
+         "Min": "12.5 W",
+         "Value": "12.5 W",
+         "Max": "12.5 W",
+         "SensorId": "/amdcpu/0/power/0",
+         "Type": "Power",
+         "RawValue": "12.5 W",
+         "ImageURL": "images/transparent.png",
+         "Children": []
+        }
+       ]
+      }
+     ],
+     "HardwareId": "/amdcpu/0"
+    },
+    {
+     "id": 121,
+     "Text": "AMD Radeon(TM) Graphics",
+     "Min": "",
+     "Value": "",
+     "Max": "",
+     "ImageURL": "images_icon/ati.png",
+     "Children": [
+      {
+       "id": 102,
+       "Text": "Voltages",
+       "Min": "",
+       "Value": "",
+       "Max": "",
+       "ImageURL": "images_icon/voltage.png",
+       "Children": [
+        {
+         "id": 101,
+         "Text": "GPU Core",
+         "Min": "0.004 V",
+         "Value": "0.004 V",
+         "Max": "0.004 V",
+         "SensorId": "/gpu-amd/0/voltage/0",
+         "Type": "Voltage",
+         "RawValue": "0.004 V",
+         "ImageURL": "images/transparent.png",
+         "Children": []
+        }
+       ]
+      },
+      {
+       "id": 105,
+       "Text": "Clocks",
+       "Min": "",
+       "Value": "",
+       "Max": "",
+       "ImageURL": "images_icon/clock.png",
+       "Children": [
+        {
+         "id": 103,
+         "Text": "GPU Core",
+         "Min": "400.0 MHz",
+         "Value": "400.0 MHz",
+         "Max": "400.0 MHz",
+         "SensorId": "/gpu-amd/0/clock/0",
+         "Type": "Clock",
+         "RawValue": "400.0 MHz",
+         "ImageURL": "images/transparent.png",
+         "Children": []
+        },
+        {
+         "id": 104,
+         "Text": "GPU Memory",
+         "Min": "1600.0 MHz",
+         "Value": "1600.0 MHz",
+         "Max": "1600.0 MHz",
+         "SensorId": "/gpu-amd/0/clock/2",
+         "Type": "Clock",
+         "RawValue": "1600.0 MHz",
+         "ImageURL": "images/transparent.png",
+         "Children": []
+        }
+       ]
+      },
+      {
+       "id": 109,
+       "Text": "Load",
+       "Min": "",
+       "Value": "",
+       "Max": "",
+       "ImageURL": "images_icon/load.png",
+       "Children": [
+        {
+         "id": 106,
+         "Text": "GPU Core",
+         "Min": "1.0 %",
+         "Value": "1.0 %",
+         "Max": "1.0 %",
+         "SensorId": "/gpu-amd/0/load/0",
+         "Type": "Load",
+         "RawValue": "1.0 %",
+         "ImageURL": "images/transparent.png",
+         "Children": []
+        },
+        {
+         "id": 107,
+         "Text": "D3D 3D",
+         "Min": "1.2 %",
+         "Value": "1.2 %",
+         "Max": "1.2 %",
+         "SensorId": "/gpu-amd/0/load/2",
+         "Type": "Load",
+         "RawValue": "1.2 %",
+         "ImageURL": "images/transparent.png",
+         "Children": []
+        },
+        {
+         "id": 108,
+         "Text": "D3D Copy",
+         "Min": "0.3 %",
+         "Value": "0.3 %",
+         "Max": "0.3 %",
+         "SensorId": "/gpu-amd/0/load/5",
+         "Type": "Load",
+         "RawValue": "0.3 %",
+         "ImageURL": "images/transparent.png",
+         "Children": []
+        }
+       ]
+      },
+      {
+       "id": 111,
+       "Text": "Factors",
+       "Min": "",
+       "Value": "",
+       "Max": "",
+       "ImageURL": "images_icon/power.png",
+       "Children": [
+        {
+         "id": 110,
+         "Text": "Fullscreen FPS",
+         "Min": "-1.000",
+         "Value": "-1.000",
+         "Max": "-1.000",
+         "SensorId": "/gpu-amd/0/factor/0",
+         "Type": "Factor",
+         "RawValue": "-1.000",
+         "ImageURL": "images/transparent.png",
+         "Children": []
+        }
+       ]
+      },
+      {
+       "id": 120,
+       "Text": "Data",
+       "Min": "",
+       "Value": "",
+       "Max": "",
+       "ImageURL": "images_icon/power.png",
+       "Children": [
+        {
+         "id": 112,
+         "Text": "GPU Memory Used",
+         "Min": "384.0 MB",
+         "Value": "384.0 MB",
+         "Max": "384.0 MB",
+         "SensorId": "/gpu-amd/0/smalldata/0",
+         "Type": "SmallData",
+         "RawValue": "384.0 MB",
+         "ImageURL": "images/transparent.png",
+         "Children": []
+        },
+        {
+         "id": 113,
+         "Text": "GPU Memory Free",
+         "Min": "128.0 MB",
+         "Value": "128.0 MB",
+         "Max": "128.0 MB",
+         "SensorId": "/gpu-amd/0/smalldata/1",
+         "Type": "SmallData",
+         "RawValue": "128.0 MB",
+         "ImageURL": "images/transparent.png",
+         "Children": []
+        },
+        {
+         "id": 114,
+         "Text": "GPU Memory Total",
+         "Min": "512.0 MB",
+         "Value": "512.0 MB",
+         "Max": "512.0 MB",
+         "SensorId": "/gpu-amd/0/smalldata/2",
+         "Type": "SmallData",
+         "RawValue": "512.0 MB",
+         "ImageURL": "images/transparent.png",
+         "Children": []
+        },
+        {
+         "id": 115,
+         "Text": "D3D Dedicated Memory Used",
+         "Min": "384.9 MB",
+         "Value": "384.9 MB",
+         "Max": "384.9 MB",
+         "SensorId": "/gpu-amd/0/smalldata/3",
+         "Type": "SmallData",
+         "RawValue": "384.9 MB",
+         "ImageURL": "images/transparent.png",
+         "Children": []
+        },
+        {
+         "id": 116,
+         "Text": "D3D Dedicated Memory Total",
+         "Min": "495.8 MB",
+         "Value": "495.8 MB",
+         "Max": "495.8 MB",
+         "SensorId": "/gpu-amd/0/smalldata/5",
+         "Type": "SmallData",
+         "RawValue": "495.8 MB",
+         "ImageURL": "images/transparent.png",
+         "Children": []
+        },
+        {
+         "id": 117,
+         "Text": "D3D Shared Memory Used",
+         "Min": "199.4 MB",
+         "Value": "199.4 MB",
+         "Max": "199.4 MB",
+         "SensorId": "/gpu-amd/0/smalldata/6",
+         "Type": "SmallData",
+         "RawValue": "199.4 MB",
+         "ImageURL": "images/transparent.png",
+         "Children": []
+        },
+        {
+         "id": 118,
+         "Text": "D3D Shared Memory Free",
+         "Min": "7687.3 MB",
+         "Value": "7687.3 MB",
+         "Max": "7687.3 MB",
+         "SensorId": "/gpu-amd/0/smalldata/7",
+         "Type": "SmallData",
+         "RawValue": "7687.3 MB",
+         "ImageURL": "images/transparent.png",
+         "Children": []
+        },
+        {
+         "id": 119,
+         "Text": "D3D Shared Memory Total",
+         "Min": "7886.7 MB",
+         "Value": "7886.7 MB",
+         "Max": "7886.7 MB",
+         "SensorId": "/gpu-amd/0/smalldata/8",
+         "Type": "SmallData",
+         "RawValue": "7886.7 MB",
+         "ImageURL": "images/transparent.png",
+         "Children": []
+        }
+       ]
+      }
+     ],
+     "HardwareId": "/gpu-amd/0"
+    },
+    {
+     "id": 130,
+     "Text": "Nuvoton NCT6797D",
+     "Min": "",
+     "Value": "",
+     "Max": "",
+     "ImageURL": "images_icon/chip.png",
+     "Children": [
+      {
+       "id": 129,
+       "Text": "Fans",
+       "Min": "",
+       "Value": "",
+       "Max": "",
+       "ImageURL": "images_icon/fan.png",
+       "Children": [
+        {
+         "id": 127,
+         "Text": "CPU Fan",
+         "Min": "1250 RPM",
+         "Value": "1250 RPM",
+         "Max": "1250 RPM",
+         "SensorId": "/lpc/nct6797d/0/fan/1",
+         "Type": "Fan",
+         "RawValue": "1250 RPM",
+         "ImageURL": "images/transparent.png",
+         "Children": []
+        },
+        {
+         "id": 128,
+         "Text": "Fan #2",
+         "Min": "0 RPM",
+         "Value": "0 RPM",
+         "Max": "0 RPM",
+         "SensorId": "/lpc/nct6797d/0/fan/2",
+         "Type": "Fan",
+         "RawValue": "0 RPM",
+         "ImageURL": "images/transparent.png",
+         "Children": []
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

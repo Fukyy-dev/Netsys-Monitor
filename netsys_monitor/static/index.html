@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Netsys Monitor</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230f172a'/%3E%3Cpath d='M6 22l5-7 4 4 6-9 5 8' fill='none' stroke='%2338bdf8' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/style.css?v=__VERSION__">
+</head>
+<body>
+<div id="splash" aria-hidden="true">
+  <div class="sp-box">
+    <svg class="sp-logo" viewBox="0 0 32 32" width="132" height="132">
+      <defs><linearGradient id="spg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#38bdf8"/><stop offset="1" stop-color="#818cf8"/></linearGradient></defs>
+      <rect class="sp-tile" x="1" y="1" width="30" height="30" rx="9" fill="#0f172a" stroke="url(#spg)" stroke-width=".8"/>
+      <path class="sp-line" d="M6 21l5-7 4 4 5-8 6 9" fill="none" stroke="url(#spg)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle class="sp-ring" cx="26" cy="19" r="2.2" fill="none" stroke="#f472b6" stroke-width=".6"/>
+      <circle class="sp-dot" cx="26" cy="19" r="2.2" fill="#f472b6"/>
+    </svg>
+    <div class="sp-name"><span>Netsys</span> Monitor</div>
+    <div class="sp-tag">Network &amp; System Monitor</div>
+    <div class="sp-bar"><i></i></div>
+    <div class="sp-msg" id="spMsg">Memulai…</div>
+  </div>
+</div>
+<dialog class="set-dlg" id="setDlg" aria-labelledby="setTtl">
+  <div class="set-in">
+    <div class="set-h"><h2 id="setTtl">Pengaturan</h2><button class="ib" id="setX" title="Tutup"><i data-ic="x"></i></button></div>
+    <div class="set-body">
+      <fieldset><legend>Tampilan</legend>
+        <div class="set-row"><label><input type="radio" name="thm" value="auto"> Ikuti Windows</label><label><input type="radio" name="thm" value="light"> Terang</label><label><input type="radio" name="thm" value="dark"> Gelap</label></div>
+      </fieldset>
+      <fieldset><legend>Notifikasi</legend>
+        <div class="set-row"><label><input type="checkbox" id="sNotify"> Notifikasi desktop (ikon tray)</label></div>
+        <div class="set-row"><label><input type="checkbox" id="sQuiet"> Jam tenang (tanpa notifikasi desktop &amp; webhook)</label>
+          <label>dari <input type="time" id="sQ1"></label><label>sampai <input type="time" id="sQ2"></label></div>
+        <div class="set-hint">Notifikasi hanya untuk peringatan kritis, perangkat asing, dan perubahan MAC gateway.</div>
+      </fieldset>
+      <fieldset><legend>Webhook (kirim peringatan ke Discord / Telegram / URL)</legend>
+        <div class="set-row"><label><input type="checkbox" id="sWon"> Aktifkan</label>
+          <label>Jenis <select id="sWkind"><option value="discord">Discord</option><option value="telegram">Telegram</option><option value="generic">URL umum (JSON)</option></select></label>
+          <label>Kirim <select id="sWlvl"><option value="crit">kritis saja</option><option value="warn">peringatan &amp; kritis</option></select></label></div>
+        <div class="set-row" id="sWurlRow"><input type="password" id="sWurl" class="wide" placeholder="URL webhook" autocomplete="off" aria-label="URL webhook"></div>
+        <div class="set-row" id="sWtgRow"><input type="password" id="sWtok" class="wide" placeholder="Token bot Telegram" autocomplete="off" aria-label="Token bot"><input type="text" id="sWchat" placeholder="Chat ID" aria-label="Chat ID"></div>
+        <div class="set-row"><button class="btn sm ghost" id="sWtest">Kirim pesan tes</button><span class="set-hint">URL/token disimpan lokal di folder data dan tidak pernah ditampilkan kembali.</span></div>
+      </fieldset>
+      <fieldset><legend>Ambang peringatan</legend>
+        <table><thead><tr><th>Metrik</th><th>Peringatan</th><th>Kritis</th></tr></thead><tbody id="sTh"></tbody></table>
+        <div class="set-row"><button class="btn sm ghost" id="sThReset">Kembalikan ke default</button></div>
+      </fieldset>
+      <fieldset><legend>Data &amp; pembaruan</legend>
+        <div class="set-row"><label><input type="checkbox" id="sIdle"> Mode hemat saat dashboard tidak dibuka</label></div>
+        <div class="set-row"><span id="sOuiTxt" class="set-hint">-</span><button class="btn sm ghost" id="sOuiBtn">Unduh database vendor MAC</button></div>
+        <div class="set-row"><label><input type="checkbox" id="sUpd"> Cek versi baru di GitHub (sekali tiap 6 jam)</label><button class="btn sm ghost" id="sUpdBtn">Cek sekarang</button><span id="sUpdTxt" class="set-hint"></span></div>
+      </fieldset>
+    </div>
+    <div class="set-f"><span id="setMsg" role="status" aria-live="polite"></span><button class="btn ghost" id="setCancel" style="width:auto;padding:9px 18px">Tutup</button><button class="btn" id="setSave" style="width:auto;padding:9px 22px">Simpan</button></div>
+  </div>
+</dialog>
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+<div class="modal" id="modal" hidden><div class="mbox">
+  <h3 id="mTitle">Ubah perangkat</h3>
+  <label class="fld">Nama perangkat<input id="mName" maxlength="40" autocomplete="off"></label>
+  <label class="fld">Tipe<select id="mType"></select></label>
+  <div class="mbtn"><button class="btn ghost" id="mCancel">Batal</button><button class="btn" id="mOk">Simpan</button></div>
+</div></div>
+
+<section class="banner" id="banner">
+  <canvas id="mesh"></canvas>
+  <div class="banner-in">
+    <div>
+      <div class="b-brand">
+        <svg class="mark lg" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#0f172a" stroke="rgba(255,255,255,.25)"/><path d="M6 21l5-7 4 4 5-8 6 9" fill="none" stroke="#38bdf8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="26" cy="19" r="2.2" fill="#f472b6"/></svg>
+        <div><h1>Netsys Monitor</h1><p>Pemantauan jaringan, sistem, dan perangkat secara real-time</p></div>
+      </div>
+      <div class="b-chips">
+        <span class="chip off" id="status"><i></i><span>Menghubungkan</span></span>
+        <span class="gchip" id="hostos"></span>
+        <span class="gchip">IP lokal <b id="lip">-</b></span>
+        <span class="gchip">IP publik <b id="pip">-</b></span>
+        <span class="gchip">Uptime <b id="uptime">-</b></span>
+        <span class="gchip" id="battWrap" hidden>Baterai <b id="batt"></b></span>
+        <span class="gchip"><span id="dateTxt">-</span> · <b id="clock">-</b> WIB</span>
+        <a class="gchip" id="updChip" target="_blank" rel="noopener noreferrer" hidden>Pembaruan <b id="updTxt"></b></a>
+        <button class="pbtn" id="setBtn" title="Pengaturan" aria-haspopup="dialog"><i data-ic="gear"></i><span>Pengaturan</span></button>
+        <button class="pbtn" data-priv title="Sembunyikan IP, MAC, dan nama PC (tombol P)"><i data-ic="eye"></i><span>Sembunyikan IP</span></button>
+      </div>
+    </div>
+    <div class="b-kpis">
+      <div class="kpi" style="--k:#38bdf8"><div class="kl">Latency</div><div class="kn"><span id="kPing">-</span><small>ms</small></div><canvas id="sPing"></canvas></div>
+      <div class="kpi" style="--k:#fbbf24"><div class="kl">CPU</div><div class="kn"><span id="kCpu">0</span><small>%</small></div><canvas id="sCpu"></canvas></div>
+      <div class="kpi" style="--k:#a78bfa"><div class="kl">GPU</div><div class="kn"><span id="kGpu">-</span><small>%</small></div><canvas id="sGpu"></canvas></div>
+      <div class="kpi" style="--k:#34d399"><div class="kl">RAM</div><div class="kn"><span id="kRam">0</span><small>%</small></div><canvas id="sRam"></canvas></div>
+      <div class="kpi health"><div class="onDark" data-ring="ringHealth"></div><div id="hLabel">-</div></div>
+    </div>
+  </div>
+  <div class="ledbar" aria-hidden="true"><canvas id="ledGlow"></canvas><canvas id="led"></canvas></div>
+</section>
+
+<nav class="nav" id="nav" aria-label="Menu utama">
+  <div class="nav-in">
+    <div class="tabs" id="tabs" role="tablist">
+      <button class="tab on" data-v="net" role="tab" aria-selected="true"><i data-ic="wifi"></i><span>Jaringan</span></button>
+      <button class="tab" data-v="sys" role="tab" aria-selected="false"><i data-ic="monitor"></i><span id="sysTabLbl">Sistem</span></button>
+      <button class="tab" data-v="dev" role="tab" aria-selected="false"><i data-ic="phone"></i><span>Perangkat</span><em id="devBadge" hidden>0</em></button>
+      <button class="tab" data-v="alert" role="tab" aria-selected="false"><i data-ic="bell"></i><span>Peringatan</span><em id="alBadge" hidden>0</em></button>
+      <span class="tab-ind" id="tabInd"></span>
+    </div>
+    <div class="nav-r">
+      <span class="nav-k">&#9660; <b id="mDown">0</b></span>
+      <span class="nav-k">&#9650; <b id="mUp">0</b> Mbps</span>
+      <span class="nav-k">CPU <b id="mCpu">0</b>%</span>
+      <span class="nav-k">Ping <b id="mPing">-</b> ms</span>
+      <span class="chip off" id="miniStatus"><i></i><span>Menghubungkan</span></span>
+      <button class="pbtn" data-priv title="Sembunyikan IP, MAC, dan nama PC (tombol P)"><i data-ic="eye"></i><span>Sembunyikan IP</span></button>
+      <span class="nav-clock" id="mClock"></span>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+  <div class="astrip" id="aStrip" hidden role="button" tabindex="0"><i class="al-ic" data-ic="alert"></i><div class="as-t"></div><span class="go">Lihat detail &rarr;</span></div>
+
+  <!-- ============ JARINGAN ============ -->
+  <div class="grid view enter" id="v-net">
+    <div class="vh s12"><h2>Monitoring Jaringan</h2><p>Kecepatan, kualitas koneksi, pemakaian data, dan koneksi aktif pada PC ini.</p></div>
+
+    <section class="card hero s12">
+      <div>
+        <div class="rate"><div class="lbl"><em style="background:var(--down)"></em>Download</div>
+          <div class="v" style="color:var(--down)"><span id="dlV">0.00</span><small>Mbps</small></div>
+          <div class="s" id="dlS">0 MB/s</div></div>
+        <div class="rate"><div class="lbl"><em style="background:var(--up)"></em>Upload</div>
+          <div class="v" style="color:var(--up)"><span id="ulV">0.00</span><small>Mbps</small></div>
+          <div class="s" id="ulS">0 MB/s</div></div>
+        <div class="pills">
+          <span class="chip off" id="heroQ"><i></i><span>Kualitas koneksi</span></span>
+          <div class="pill"><b id="heroPing">-</b>ms</div>
+          <div class="pill"><b id="heroJit">-</b>ms jitter</div>
+          <div class="pill"><b id="heroLoss">-</b>% loss</div>
+        </div>
+      </div>
+      <div>
+        <div class="cw"><canvas id="cNet"></canvas><div class="tip" id="tip"></div></div>
+        <div class="legend">
+          <span><i style="background:var(--down)"></i>Download <b id="avgD">0</b> Mbps rata-rata 60 dtk</span>
+          <span><i style="background:var(--up)"></i>Upload <b id="avgU">0</b> Mbps</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card s5" style="--ac:var(--down)">
+      <h2><i class="ic" data-ic="wifi"></i>WiFi PC ini <span class="sub" id="wfSub"></span></h2>
+      <div class="empty" id="wfOff" hidden></div>
+      <div id="wfOn">
+        <div class="row"><div data-ring="ringWifi"></div>
+          <div class="kv">
+            <div>SSID <b id="wfSsid">-</b></div>
+            <div>Band · channel <b id="wfCh">-</b></div>
+            <div>Link terima / kirim <b id="wfRate">-</b></div>
+            <div>Kekuatan <b id="wfDbm">-</b></div>
+          </div></div>
+        <canvas id="cWifi" style="height:64px;margin-top:12px"></canvas>
+        <div class="kv info" style="margin-top:12px">
+          <div>BSSID <b id="wfBssid">-</b></div>
+          <div>Standar radio <b id="wfRadio">-</b></div>
+          <div>Keamanan <b id="wfAuth">-</b></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card s4" style="--ac:var(--lat)">
+      <h2><i class="ic" data-ic="pulse"></i>Latency <span class="sub">30 sampel terakhir</span></h2>
+      <table><thead><tr><th>Target</th><th class="r">Rata-rata</th><th class="r">Jitter</th><th class="r">Loss</th></tr></thead>
+        <tbody id="latBody"></tbody></table>
+      <canvas id="cPing" style="height:80px;margin-top:12px"></canvas>
+    </section>
+
+    <section class="card s3" style="--ac:var(--down)">
+      <h2><i class="ic" data-ic="gauge"></i>Speedtest</h2>
+      <button class="btn" id="stBtn">Jalankan speedtest</button>
+      <div class="err" id="stErr"></div>
+      <div class="st" id="stRes"><div class="mut" style="font-size:13px">Belum ada hasil. Tes memakai kuota internet.</div></div>
+    </section>
+
+    <section class="card s7" style="--ac:var(--up)">
+      <h2><i class="ic" data-ic="chart"></i>Pemakaian data <span class="sub"><span id="usSince"></span> &nbsp;<a class="link" href="/api/usage.csv" download>Unduh CSV</a></span></h2>
+      <div class="ugrid">
+        <div class="ubox"><div class="t">Sesi ini</div><div class="a" id="usSA">-</div><div class="b" id="usSB">-</div></div>
+        <div class="ubox"><div class="t">Hari ini</div><div class="a" id="usTA">-</div><div class="b" id="usTB">-</div></div>
+        <div class="ubox"><div class="t">Bulan ini</div><div class="a" id="usMA">-</div><div class="b" id="usMB">-</div></div>
+      </div>
+      <div class="days" id="days"></div>
+      <div class="mut" style="font-size:12px;margin-top:8px"><span style="color:var(--down)">&#9632;</span> download &nbsp; <span style="color:var(--up)">&#9632;</span> upload &nbsp; 7 hari terakhir (WIB)</div>
+    </section>
+
+    <section class="card s5" style="--ac:var(--down)">
+      <h2><i class="ic" data-ic="server"></i>Interface jaringan</h2>
+      <table><thead><tr><th>Nama</th><th class="r">&#9660; Mbps</th><th class="r">&#9650; Mbps</th></tr></thead>
+        <tbody id="ifBody"></tbody></table>
+    </section>
+
+    <section class="card s7" style="--ac:var(--down)">
+      <h2><i class="ic" data-ic="link"></i>Koneksi aktif <span class="sub" id="connSum"></span></h2>
+      <table><thead><tr><th>Proses</th><th class="r">Port lokal</th><th class="r">Tujuan</th></tr></thead>
+        <tbody id="connBody"></tbody></table>
+    </section>
+
+    <section class="card s5" style="--ac:var(--lat)">
+      <h2><i class="ic" data-ic="globe"></i>Benchmark DNS <span class="sub">tanpa cache &middot; cache</span></h2>
+      <button class="btn ghost" id="dnsBtn">Uji kecepatan DNS</button>
+      <div class="scan-stat" id="dnsStat">Belum diuji.</div>
+      <table><thead><tr><th>Server DNS</th><th class="r">Tanpa cache</th><th class="r">Cache</th><th class="r">Sukses</th></tr></thead>
+        <tbody id="dnsBody"><tr><td class="dim" colspan="4">Belum ada hasil.</td></tr></tbody></table>
+      <p class="tip-note" id="dnsAdvice"></p>
+    </section>
+
+    <section class="card s12" style="--ac:var(--gpu)">
+      <h2><i class="ic" data-ic="route"></i>Traceroute <span class="sub">jalur paket dari PC ini ke tujuan</span></h2>
+      <div class="tr-form">
+        <label class="fld" style="flex:1;min-width:220px;margin:0">Tujuan (IP atau domain)<input id="trTarget" value="1.1.1.1" maxlength="253" autocomplete="off" spellcheck="false"></label>
+        <button class="btn" id="trBtn" style="width:auto;padding:10px 22px">Jalankan</button>
+      </div>
+      <div class="scan-stat" id="trStat">Belum dijalankan.</div>
+      <div class="scan-wrap"><table><thead><tr><th class="r">Hop</th><th>Alamat</th><th>Keterangan</th><th class="r">Rata-rata</th><th>Latency</th><th class="r">Loss</th></tr></thead>
+        <tbody id="trBody"><tr><td class="dim" colspan="6">Belum ada hasil.</td></tr></tbody></table></div>
+      <p class="tip-note" id="trNote"></p>
+    </section>
+  </div>
+
+  <!-- ============ WINDOWS / SISTEM ============ -->
+  <div class="grid view" id="v-sys" hidden>
+    <div class="vh s12"><h2 id="sysTitle">Monitoring Sistem</h2><p>CPU, GPU, memori, disk, dan proses yang berjalan pada komputer ini.</p></div>
+
+    <section class="card s5" style="--ac:var(--cpu)">
+      <h2><i class="ic" data-ic="cpu"></i>CPU <span class="sub" id="cpuName"></span></h2>
+      <div class="row"><div data-ring="ringCpu"></div>
+        <div class="kv">
+          <div>Frekuensi <b id="cpuFreq">-</b></div>
+          <div>Core / thread <b id="cpuCores">-</b></div>
+          <div>Proses aktif <b id="cpuProcs">-</b></div>
+          <div>Suhu <b id="cpuTemp">-</b></div>
+          <div>Fan <b id="cpuFan">-</b></div>
+          <div>Daya paket <b id="cpuPow">-</b></div>
+        </div></div>
+      <canvas id="cCpu" style="height:70px;margin-top:12px"></canvas>
+      <div class="cores" id="cores"></div>
+    </section>
+
+    <section class="card s4" style="--ac:var(--gpu)">
+      <h2><i class="ic" data-ic="gpu"></i>GPU</h2>
+      <div id="gpus"><div class="empty">Mendeteksi GPU...</div></div>
+      <canvas id="cGpu" style="height:70px"></canvas>
+    </section>
+
+    <section class="card s3" style="--ac:var(--mem)">
+      <h2><i class="ic" data-ic="mem"></i>Memori</h2>
+      <div class="row"><div data-ring="ringMem"></div>
+        <div class="kv"><div>Dipakai <b id="memUsed">-</b></div><div>Total <b id="memTotal">-</b></div></div></div>
+      <div style="margin-top:14px"><div class="kv"><div>Swap <b id="swapTxt">-</b></div></div>
+        <div class="bar" style="margin-top:7px;--ac:var(--mem)"><i id="swapBar"></i></div></div>
+      <canvas id="cMem" style="height:70px;margin-top:14px"></canvas>
+    </section>
+
+    <section class="card s4" style="--ac:var(--disk)">
+      <h2><i class="ic" data-ic="disk"></i>Disk I/O <span class="sub">read &middot; write</span></h2>
+      <div class="row" style="gap:28px;margin-bottom:8px">
+        <div><div class="mut" style="font-size:12px">Read</div><div class="num" style="font-size:26px;font-weight:600;color:var(--disk)" id="drV">0</div></div>
+        <div><div class="mut" style="font-size:12px">Write</div><div class="num" style="font-size:26px;font-weight:600;color:var(--lat)" id="dwV">0</div></div>
+      </div>
+      <canvas id="cDisk" style="height:90px"></canvas>
+    </section>
+
+    <section class="card s4" style="--ac:var(--disk)">
+      <h2><i class="ic" data-ic="db"></i>Penyimpanan</h2>
+      <div id="vols" class="kv" style="gap:14px"></div>
+    </section>
+
+    <section class="card s4" style="--ac:var(--gpu)">
+      <h2><i class="ic" data-ic="info"></i>Info sistem</h2>
+      <div class="kv info" id="sysInfo"></div>
+    </section>
+
+    <section class="card s12" style="--ac:var(--lat)">
+      <h2><i class="ic" data-ic="info"></i>Sensor suhu &amp; aplikasi <span class="sub" id="appVer"></span></h2>
+      <div class="app-grid">
+        <div>
+          <div class="app-h"><b>Suhu &amp; fan CPU</b><span class="chip off" id="hwChip"><i></i><span>Memeriksa</span></span></div>
+          <p class="tip-note" id="hwTxt"></p>
+          <ol class="app-steps" id="hwSteps" hidden>
+            <li>Unduh <b>LibreHardwareMonitor</b> dari halaman Releases di GitHub (LibreHardwareMonitor/LibreHardwareMonitor), ekstrak, lalu jalankan <b>sebagai Administrator</b> agar driver sensor bisa dimuat.</li>
+            <li>Di menu <code>Options</code> aktifkan <code>Remote Web Server</code> &rarr; <code>Run</code> (port bawaan 8085).</li>
+            <li>Opsional: aktifkan <code>Run On Windows Startup</code> dan <code>Start Minimized</code> di menu yang sama.</li>
+            <li>Dashboard ini terhubung otomatis dalam beberapa detik, tanpa restart.</li>
+          </ol>
+        </div>
+        <div>
+          <div class="app-h"><b>Mulai otomatis dengan Windows</b><span class="chip off" id="autoChip"><i></i><span>-</span></span></div>
+          <p class="tip-note" id="autoTxt"></p>
+          <button class="btn sm ghost" id="autoBtn" style="margin-top:10px">Aktifkan</button>
+          <button class="btn sm ghost" id="notifBtn" style="margin:10px 0 0 8px">Notifikasi desktop</button>
+          <div class="kv info" style="margin-top:14px">
+            <div>Ikon tray <b id="trayTxt">-</b></div>
+            <div>Folder data <b id="dataDir">-</b></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card s12" style="--ac:var(--cpu)">
+      <h2><i class="ic" data-ic="list"></i>Proses teratas
+        <span class="seg" id="procSeg"><button class="on" data-k="cpu">CPU</button><button data-k="mem">RAM</button></span></h2>
+      <table><thead><tr><th>Nama</th><th class="r">PID</th><th class="r">CPU</th><th class="r">RAM</th></tr></thead>
+        <tbody id="procBody"></tbody></table>
+    </section>
+  </div>
+
+  <!-- ============ PERANGKAT ============ -->
+  <div class="view" id="v-dev" hidden>
+    <div class="vh"><h2>Perangkat di Jaringan</h2><p>Pantau HP, laptop, TV, dan perangkat lain di Wi-Fi/LAN yang sama dengan PC ini.</p></div>
+    <div class="sumrow">
+      <div class="card sum" style="--ac:var(--gpu)"><div class="sl">Dipantau</div><div class="sv" id="dsTotal">0</div></div>
+      <div class="card sum"><div class="sl">Online</div><div class="sv" id="dsOn" style="color:var(--ok)">0</div></div>
+      <div class="card sum"><div class="sl">Offline</div><div class="sv" id="dsOff" style="color:var(--bad)">0</div></div>
+      <div class="card sum"><div class="sl">Latency rata-rata</div><div class="sv" id="dsLat">-</div></div>
+    </div>
+    <section class="card" id="guardCard" style="--ac:var(--bad);margin-bottom:16px">
+      <h2><i class="ic" data-ic="shield"></i>Penjaga WiFi &mdash; deteksi perangkat asing <span class="sub" id="gdSub"></span></h2>
+      <div class="gd-bar">
+        <label class="gd-sw"><input type="checkbox" id="gdOn"> Pindai otomatis</label>
+        <select id="gdInt" aria-label="Jeda pindai otomatis">
+          <option value="60">tiap 1 menit</option><option value="180">tiap 3 menit</option>
+          <option value="300">tiap 5 menit</option><option value="900">tiap 15 menit</option>
+        </select>
+        <button class="btn sm ghost" id="gdScan">Pindai sekarang</button>
+        <button class="btn sm ghost" id="gdTrustAll">Percayai semua</button>
+        <button class="btn sm ghost" id="gdReset">Reset daftar</button>
+      </div>
+      <div class="gd-sum" id="gdSum"></div>
+      <div class="gd-anom" id="gdAnom"></div>
+      <div class="scan-wrap"><table><thead><tr><th>Perangkat</th><th>Pertama terlihat</th><th>Terakhir terlihat</th><th>Status</th><th class="r">Aksi</th></tr></thead>
+        <tbody id="gdBody"><tr><td class="dim" colspan="5">Belum ada perangkat tercatat.</td></tr></tbody></table></div>
+      <p class="tip-note">Pindai pertama di sebuah jaringan menjadi <b>daftar awal</b> (otomatis dipercaya). Setelah itu setiap MAC baru memicu peringatan sampai Anda menekan <b>Percayai</b>. Jika ada perangkat di daftar awal yang bukan milik Anda, klik ikon tanda seru untuk menandainya asing. HP dengan <b>MAC acak</b> bisa tampil sebagai perangkat baru saat alamatnya berganti; perangkat yang sedang tidur juga bisa lolos dari satu kali pindai.</p>
+    </section>
+
+    <div class="dev-layout">
+      <div class="dev-left">
+        <section class="card" style="--ac:var(--gpu)">
+          <h2><i class="ic" data-ic="plus"></i>Tambah perangkat</h2>
+          <label class="fld">Nama<input id="dName" maxlength="40" placeholder="mis. HP Rizky" autocomplete="off"></label>
+          <label class="fld">Alamat IP (Wi-Fi yang sama)<input id="dIp" placeholder="mis. 192.168.1.23" inputmode="decimal" autocomplete="off"></label>
+          <label class="fld">Tipe<select id="dType"></select></label>
+          <button class="btn" id="dAdd"><i data-ic="plus"></i>Mulai pantau</button>
+          <div class="err" id="dErr"></div>
+          <p class="tip-note">IP HP ada di Pengaturan Wi-Fi &rarr; detail jaringan. Atau pindai jaringan di bawah lalu klik <b>Pantau</b>.</p>
+        </section>
+        <section class="card" style="--ac:var(--disk)">
+          <h2><i class="ic" id="scanIc" data-ic="radar"></i>Pindai jaringan</h2>
+          <button class="btn ghost" id="scanBtn"><i data-ic="radar"></i><span>Pindai jaringan</span></button>
+          <div class="scan-stat" id="scanStat">Belum dipindai</div>
+          <div class="scan-wrap"><table><tbody id="scanBody"></tbody></table></div>
+          <p class="tip-note">HP dengan label <b>MAC acak</b> memakai fitur privasi Wi-Fi, sehingga IP-nya bisa berubah. Atur IP tetap (reservasi DHCP) di router agar pemantauan stabil.</p>
+        </section>
+      </div>
+      <div>
+        <div class="dv-grid" id="devGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PERINGATAN ============ -->
+  <div class="grid view" id="v-alert" hidden>
+    <div class="vh s12"><h2>Pusat Peringatan</h2><p>Peringatan aktif beserta penyebab, diagnosis, dan saran tindakan. Semua waktu dalam WIB.</p></div>
+    <section class="card s12" style="--ac:var(--down)">
+      <h2><i class="ic" data-ic="chart"></i>Riwayat <span class="sub" id="hsNote"></span></h2>
+      <div class="hs-bar">
+        <label>Rentang <select id="hsRange" aria-label="Rentang riwayat"><option value="6">6 jam</option><option value="24" selected>24 jam</option><option value="168">7 hari</option><option value="720">30 hari</option></select></label>
+        <a href="/api/export/events.csv" download>Ekspor peringatan (CSV)</a><a href="/api/export/metrics.csv" download>Ekspor metrik (CSV)</a>
+        <a href="/api/export/devices.csv" download>Ekspor log perangkat (CSV)</a><a href="/api/export/all.json" download>Semua (JSON)</a>
+      </div>
+      <div class="hs-g"><div><h3>CPU (oranye) &amp; RAM (hijau)</h3><canvas id="hsA"></canvas></div><div><h3>Latency ke Cloudflare</h3><canvas id="hsB"></canvas></div><div><h3>Sinyal WiFi</h3><canvas id="hsC"></canvas></div></div>
+    </section>
+    <section class="card ac s12" id="alertCenter">
+      <h2><i class="ic" data-ic="bell"></i>Peringatan
+        <span class="seg" id="acSeg"><button class="on" data-t="act">Aktif <em id="nAct">0</em></button><button data-t="chk">Pemeriksaan</button><button data-t="log">Riwayat</button></span></h2>
+      <div id="acBody"></div>
+    </section>
+  </div>
+</div>
+
+<script src="/static/app.js?v=__VERSION__"></script>
+</body>
+</html>

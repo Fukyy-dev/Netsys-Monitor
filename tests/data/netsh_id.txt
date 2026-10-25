@@ -1,0 +1,17 @@
+
+Ada 1 antarmuka pada sistem: 
+
+    Nama                   : Wi-Fi
+    Alamat fisik           : aa:bb:cc:dd:ee:01
+    Status                 : terhubung
+    SSID                   : Kos Budi
+    BSSID                  : 11:22:33:44:55:66
+    Jenis jaringan         : Infrastruktur
+    Jenis radio            : 802.11n
+    Autentikasi            : WPA2-Personal
+    Cipher                 : CCMP
+    Mode koneksi           : Sambungkan Otomatis
+    Saluran                : 6
+    Kecepatan terima (Mbps): 144.4
+    Kecepatan kirim (Mbps) : 130
+    Sinyal                 : 38%

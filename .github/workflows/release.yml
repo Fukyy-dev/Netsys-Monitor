@@ -1,0 +1,53 @@
+name: Release
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: python -m pip install -r requirements-dev.txt
+      - run: python -m pip install -e . --no-deps
+      - run: pytest
+      - run: python -m netsys_monitor --make-icon netsys.ico
+      - run: pyinstaller --noconfirm --clean packaging/netsys_monitor.spec
+      - name: Installer (Inno Setup)
+        shell: pwsh
+        run: |
+          choco install innosetup -y --no-progress
+          $v = "${{ github.ref_name }}".TrimStart("v")
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" /DAppVersion=$v packaging\installer.iss
+      - name: Checksums
+        shell: pwsh
+        run: |
+          Get-FileHash dist\NetsysMonitor.exe -Algorithm SHA256 | ForEach-Object { "$($_.Hash.ToLower())  NetsysMonitor.exe" } | Out-File dist\SHA256SUMS.txt -Encoding ascii
+          Get-ChildItem dist\NetsysMonitor-Setup-*.exe | ForEach-Object { $h = (Get-FileHash $_.FullName -Algorithm SHA256).Hash.ToLower(); "$h  $($_.Name)" } | Out-File dist\SHA256SUMS.txt -Append -Encoding ascii
+      - uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            dist/NetsysMonitor.exe
+            dist/NetsysMonitor-Setup-*.exe
+            dist/SHA256SUMS.txt
+
+  pypi-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install build && python -m build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: python-dist
+          path: dist/

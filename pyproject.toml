@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "netsys-monitor"
+dynamic = ["version"]
+description = "Dashboard monitoring jaringan & sistem: latency, WiFi, perangkat asing, suhu/fan/GPU, traceroute dan benchmark DNS"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Netsys Monitor contributors" }]
+keywords = ["network", "monitor", "dashboard", "wifi", "psutil", "windows", "librehardwaremonitor"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: Web Environment",
+  "Intended Audience :: End Users/Desktop",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: Microsoft :: Windows",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3",
+  "Topic :: System :: Monitoring",
+  "Topic :: System :: Networking :: Monitoring",
+]
+dependencies = ["psutil>=5.9", "speedtest-cli>=2.1", "nvidia-ml-py>=12"]
+
+[project.optional-dependencies]
+tray = ["pystray>=0.19", "pillow>=10"]
+dev = ["pytest>=7", "ruff>=0.5", "pyinstaller>=6", "pystray>=0.19", "pillow>=10", "fonttools[woff]", "brotli"]
+
+[project.scripts]
+netsys-monitor = "netsys_monitor.cli:main"
+
+[project.gui-scripts]
+netsys-monitor-gui = "netsys_monitor.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["netsys_monitor*"]
+
+[tool.setuptools.package-data]
+netsys_monitor = ["static/*", "static/fonts/*"]
+
+[tool.setuptools.dynamic]
+version = { attr = "netsys_monitor.config.APP_VERSION" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 140
+target-version = "py39"
+extend-exclude = ["_monolith_v2_2.py", "split.py", "build", "dist"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["E501", "B008", "UP015", "UP035", "UP006", "UP007", "UP045", "B904", "E741", "E402"]
